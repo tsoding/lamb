@@ -1,3 +1,5 @@
+// ,---@.
+//  W-W'
 // cc -pedantic -std=c99 -o lamb lamb.c
 #include <assert.h>
 #include <stdio.h>
@@ -474,9 +476,9 @@ char buffer[1024];
 int main(void)
 {
     String_Builder sb = {0};
-
     size_t limit = 10;
-    printf("Lamb\n");
+    printf(",---@.\n");
+    printf(" W-W'\n");
     printf("Enter :help for more info\n");
     for (;;) {
         printf("𝛌> ");
