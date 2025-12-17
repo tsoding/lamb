@@ -492,7 +492,11 @@ bool command(Commands *commands, const char *input, const char *name, const char
         .description = description,
     };
     da_append(commands, command);
-    return strcmp(input, name) == 0;
+    while (*input && *name && *input == *name) {
+        input++;
+        name++;
+    }
+    return *input == '\0';
 }
 
 void print_available_commands(Commands *commands)
