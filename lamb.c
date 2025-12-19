@@ -603,7 +603,7 @@ bool parse_expr(Lexer *l, Expr_Index *expr)
     while (
         l->token != TOKEN_CPAREN &&
         l->token != TOKEN_END    &&
-        l->token != TOKEN_SEMICOLON // TODO: Can we get rid of the semicolon? Why looking ahead for `name =` doesn't work?
+        l->token != TOKEN_SEMICOLON
     ) {
         Expr_Index rhs;
         if (!parse_primary(l, &rhs)) return false;
