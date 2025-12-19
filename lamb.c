@@ -110,7 +110,7 @@ bool var_name_eq(Var_Name a, Var_Name b)
     return a.name == b.name && a.id == b.id;
 }
 
-Var_Name var_name_free(const char *name)
+Var_Name var_name(const char *name)
 {
     Var_Name var = { .name = name };
     return var;
@@ -209,7 +209,7 @@ Expr_Index var(const char *name)
 {
     Expr_Index expr = make_expr();
     expr_slot(expr).kind = EXPR_VAR;
-    expr_slot(expr).as.var = var_name_free(intern(name));
+    expr_slot(expr).as.var = var_name(intern(name));
     return expr;
 }
 
@@ -225,7 +225,7 @@ Expr_Index fun(const char *arg, Expr_Index body)
 {
     Expr_Index expr = make_expr();
     expr_slot(expr).kind = EXPR_FUN;
-    expr_slot(expr).as.fun.arg = var_name_free(intern(arg));
+    expr_slot(expr).as.fun.arg = var_name(intern(arg));
     expr_slot(expr).as.fun.body = body;
     return expr;
 }
@@ -397,16 +397,16 @@ typedef enum {
 const char *token_kind_display(Token_Kind kind)
 {
     switch (kind) {
-    case TOKEN_INVALID: return "TOKEN_INVALID";
-    case TOKEN_END:     return "TOKEN_END";
-    case TOKEN_OPAREN:  return "TOKEN_OPAREN";
-    case TOKEN_CPAREN:  return "TOKEN_CPAREN";
-    case TOKEN_LAMBDA:  return "TOKEN_LAMBDA";
-    case TOKEN_DOT:     return "TOKEN_DOT";
-    case TOKEN_NAME:    return "TOKEN_NAME";
-    case TOKEN_COLON:   return "TOKEN_COLON";
-    case TOKEN_SEMICOLON:   return "TOKEN_SEMICOLON";
-    case TOKEN_EQUALS:   return "TOKEN_EQUALS";
+    case TOKEN_INVALID:   return "TOKEN_INVALID";
+    case TOKEN_END:       return "TOKEN_END";
+    case TOKEN_OPAREN:    return "TOKEN_OPAREN";
+    case TOKEN_CPAREN:    return "TOKEN_CPAREN";
+    case TOKEN_LAMBDA:    return "TOKEN_LAMBDA";
+    case TOKEN_DOT:       return "TOKEN_DOT";
+    case TOKEN_NAME:      return "TOKEN_NAME";
+    case TOKEN_COLON:     return "TOKEN_COLON";
+    case TOKEN_SEMICOLON: return "TOKEN_SEMICOLON";
+    case TOKEN_EQUALS:    return "TOKEN_EQUALS";
     default: UNREACHABLE("Token_Kind");
     }
 }
@@ -466,13 +466,13 @@ bool lexer_next(Lexer *l)
     }
 
     switch (x) {
-    case '(':  l->token = TOKEN_OPAREN; return true;
-    case ')':  l->token = TOKEN_CPAREN; return true;
-    case '\\': l->token = TOKEN_LAMBDA; return true;
-    case '.':  l->token = TOKEN_DOT;    return true;
-    case ':':  l->token = TOKEN_COLON;  return true;
-    case ';':  l->token = TOKEN_SEMICOLON;  return true;
-    case '=':  l->token = TOKEN_EQUALS; return true;
+    case '(':  l->token = TOKEN_OPAREN;    return true;
+    case ')':  l->token = TOKEN_CPAREN;    return true;
+    case '\\': l->token = TOKEN_LAMBDA;    return true;
+    case '.':  l->token = TOKEN_DOT;       return true;
+    case ':':  l->token = TOKEN_COLON;     return true;
+    case ';':  l->token = TOKEN_SEMICOLON; return true;
+    case '=':  l->token = TOKEN_EQUALS;    return true;
     }
 
     if (isalnum(x)) {
@@ -563,7 +563,11 @@ bool parse_expr(Lexer *l, Expr_Index *expr)
     if (!parse_primary(l, expr)) return false;
 
     if (!lexer_peek(l)) return false;
-    while (l->token != TOKEN_CPAREN && l->token != TOKEN_END && l->token != TOKEN_SEMICOLON) {
+    while (
+        l->token != TOKEN_CPAREN &&
+        l->token != TOKEN_END    &&
+        l->token != TOKEN_SEMICOLON // TODO: Can we get rid of the semicolon? Why looking ahead for `name =` doesn't work?
+    ) {
         Expr_Index rhs;
         if (!parse_primary(l, &rhs)) return false;
         *expr = app(*expr, rhs);
