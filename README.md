@@ -6,22 +6,22 @@ Smallest Pure Functional Programming Language in C. Based on [Untype Lambda Calc
 
 ```console
 $ cc -std=c99 -o lamb lamb.c
-$ ./lamb
+$ ./lamb ./std.lamb
+...
 ,---@>
  W-W'
 Enter :help for more info
-@> (\f.(\x.f (x x)) (\x.f (x x))) g
-(\f.(\x.f (x x)) (\x.f (x x))) g
-(\x.g (x x)) (\x.g (x x))
-g ((\x.g (x x)) (\x.g (x x)))
-g (g ((\x.g (x x)) (\x.g (x x))))
-g (g (g ((\x.g (x x)) (\x.g (x x)))))
-g (g (g (g ((\x.g (x x)) (\x.g (x x))))))
-g (g (g (g (g ((\x.g (x x)) (\x.g (x x)))))))
-g (g (g (g (g (g ((\x.g (x x)) (\x.g (x x))))))))
-g (g (g (g (g (g (g ((\x.g (x x)) (\x.g (x x)))))))))
-g (g (g (g (g (g (g (g ((\x.g (x x)) (\x.g (x x))))))))))
-...
+@> pair 69 (pair 420 1337)
+\f.(f 69) (\f.(f 420) 1337)
+@> xs = pair 69 (pair 420 1337)
+Created binding xs
+@> first xs
+69
+@> second xs
+\f.(f 420) 1337
+@> first (second xs)
+420
+@>
 ```
 
 It's recommended to use Lamb with [rlwrap](https://github.com/hanslub42/rlwrap). Just do
