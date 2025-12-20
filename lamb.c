@@ -995,7 +995,6 @@ void ctrl_c_handler(int signum)
     ctrl_c = 1;
 }
 
-// TODO: use editor from $EDITOR or $LAMB_EDITOR on :edit
 // TODO(20251219-231632): it's a bit annoying that lexer forces us to write :edit "file.lamb" instead of just :edit file.lamb
 //   Maybe as soon as we parsed TOKEN_COLON and TOKEN_NAME we should just treat the rest of characters as the path without
 //   using the Lexer. Maybe trim whitespaces from both ends and we are good to go. This also means we don't need TOKEN_STRING.
@@ -1003,6 +1002,7 @@ void ctrl_c_handler(int signum)
 //   It treats this as you didn't provide anything at asll. Very like will be invalidated by 20251219-231632.
 // TODO: something to check alpha-equivalence of two terms
 // TODO: consider changing expr_display so it displays shortened up version of exprs so on :save it all looks nice
+// TODO: :save is pretty dangerous since it override all the formatting. Maybe it should do YorN?
 int main(int argc, char **argv)
 {
     static char buffer[1024];
@@ -1016,6 +1016,10 @@ int main(int argc, char **argv)
     act.sa_handler = ctrl_c_handler;
     sigaction(SIGINT, &act, NULL);
 #endif // _WIN32
+
+    const char *editor  = getenv("LAMB_EDITOR");
+    if (!editor) editor = getenv("EDITOR");
+    if (!editor) editor = "vi";
 
     // `active_file_path` is always located on the heap. If you need to replace it, first free() it
     // and then copy_string() it.
@@ -1115,7 +1119,7 @@ again:
 
                 static Cmd cmd = {0};
                 cmd.count = 0;
-                da_append(&cmd, "vi");
+                da_append(&cmd, editor);
                 da_append(&cmd, active_file_path);
                 if (cmd_run(&cmd)) {
                     bindings.count = 0;
