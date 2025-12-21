@@ -141,7 +141,7 @@ RESULT: ((f a) b) c
 ```console
 $ ./lamb ./std.lamb
 @> xs = cons 69 (cons 420 (cons 1337 (cons foo (cons bar (cons bar nil)))))
-Updated binding xs
+Created binding xs
 @> #void (trace_list xs)
 TRACE: 69
 TRACE: 420
