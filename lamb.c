@@ -1274,6 +1274,7 @@ again:
             if (command(&commands, l.string.items, "debug", "<expr>", "Step debug the evaluation of an expression")) {
                 Expr_Index expr;
                 if (!parse_expr(&l, &expr)) goto again;
+                if (!lexer_expect(&l, TOKEN_END)) goto again;
                 for (size_t i = bindings.count; i > 0; --i) {
                     expr = replace(bindings.items[i-1].name, expr, bindings.items[i-1].body);
                 }
@@ -1317,6 +1318,7 @@ again:
             if (command(&commands, l.string.items, "ast", "<expr>", "print the AST of the expression")) {
                 Expr_Index expr;
                 if (!parse_expr(&l, &expr)) goto again;
+                if (!lexer_expect(&l, TOKEN_END)) goto again;
                 dump_expr_ast(expr);
                 goto again;
             }
@@ -1344,12 +1346,14 @@ again:
             if (!lexer_expect(&l, TOKEN_EQUALS)) goto again;
             Expr_Index body;
             if (!parse_expr(&l, &body)) goto again;
+            if (!lexer_expect(&l, TOKEN_END)) goto again;
             create_binding(&bindings, name, body);
             goto again;
         }
 
         Expr_Index expr;
         if (!parse_expr(&l, &expr)) goto again;
+        if (!lexer_expect(&l, TOKEN_END)) goto again;
         for (size_t i = bindings.count; i > 0; --i) {
             expr = replace(bindings.items[i-1].name, expr, bindings.items[i-1].body);
         }
