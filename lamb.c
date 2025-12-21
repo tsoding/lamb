@@ -489,10 +489,18 @@ void dump_expr_ast(Expr_Index expr)
 
     switch (expr_slot(expr).kind) {
     case EXPR_VAR:
-        printf("[VAR] %s:%zu\n", expr_slot(expr).as.var.label, expr_slot(expr).as.var.tag);
+        if (expr_slot(expr).as.var.tag == 0) {
+            printf("[VAR] %s\n", expr_slot(expr).as.var.label);
+        } else {
+            printf("[VAR] %s:%zu\n", expr_slot(expr).as.var.label, expr_slot(expr).as.var.tag);
+        }
         break;
     case EXPR_FUN:
-        printf("[FUN] \\%s:%zu\n", expr_slot(expr).as.fun.param.label, expr_slot(expr).as.fun.param.tag);
+        if (expr_slot(expr).as.fun.param.tag == 0) {
+            printf("[FUN] \\%s\n", expr_slot(expr).as.fun.param.label);
+        } else {
+            printf("[FUN] \\%s:%zu\n", expr_slot(expr).as.fun.param.label, expr_slot(expr).as.fun.param.tag);
+        }
         da_append(&stack, false); {
             dump_expr_ast(expr_slot(expr).as.fun.body);
         } stack.count -= 1;

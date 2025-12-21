@@ -12,13 +12,13 @@ $ ./lamb ./std.lamb
  W-W'
 Enter :help for more info
 @> pair 69 (pair 420 1337)
-RESULT: \f.(f 69) (\f.(f 420) 1337)
+RESULT: \f.f 69 (\f.f 420 1337)
 @> xs = pair 69 (pair 420 1337)
 Created binding xs
 @> first xs
 RESULT: 69
 @> second xs
-RESULT: \f.(f 420) 1337
+RESULT: \f.f 420 1337
 @> first (second xs)
 RESULT: 420
 @>
@@ -41,12 +41,12 @@ The syntax is based on the [Notation of Untype Lambda Calculus](https://en.wikip
 Variables are any alphanumeric names:
 
 ```
-@> x
-RESULT: x
-@> hello69
-RESULT: hello69
-@> 69420
-RESULT: 69420
+@> :ast x
+[VAR] x
+@> :ast hello69
+[VAR] hello69
+@> :ast 69420
+[VAR] 69420
 @>
 ```
 
@@ -57,40 +57,48 @@ Yes, fully numeric sequences of characters are also considered names, because th
 To denote functions instead of small greek lambda `λ` we use backslash `\` (this may change in the future, we are considering allowing `λ` as an alternative):
 
 ```
-@> \x.x
-RESULT: \x.x
-@> \x.\y.x
-RESULT: \x.\y.x
+@> :ast \x.x
+[FUN] \x
++--[VAR] x
+@> :ast \x.\y.x
+[FUN] \x
++--[FUN] \y
+   +--[VAR] x
 @>
 ```
 
 The body of the function extends as far right as possible. Use parenthesis to denote the boundaries of the function:
 
 ```
-@> \x.x x
-RESULT: \x.x x
-@> (\x.x) x
-RESULT: x
+@> :ast \x.x x
+[FUN] \x
++--[APP]
+   +--[VAR] x
+   +--[VAR] x
+@> :ast (\x.x) x
+[APP]
++--[FUN] \x
+|  +--[VAR] x
++--[VAR] x
 @>
 ```
 
 Since the variable names can be longer than 1 character we can't use that silly mathematician trick of stitching their names together by saying that `\xy.x` means `\x.\y.x`, because in Lamb it just means it's a single function with a parameter `xy`:
 
 ```
-@> \xy.x
-RESULT: \xy.x
-@> (\xy.x) z
-RESULT: x
+@> :ast \xy.x
+[FUN] \xy
++--[VAR] x
 @>
 ```
 
 Instead we allow you to drop consequent backslashes turning the dot `.` into a parameter separator:
 
 ```
-@> \x.y.x
-RESULT: \x.\y.x
-@> (\x.y.x) z
-RESULT: \y.z
+@> :ast \x.y.x
+[FUN] \x
++--[FUN] \y
+   +--[VAR] x
 @>
 ```
 
@@ -99,6 +107,11 @@ RESULT: \y.z
 Just separate two lambda expressions with a space:
 
 ```
+@> :ast (\x.x) x
+[APP]
++--[FUN] \x
+|  +--[VAR] x
++--[VAR] x
 @> (\x.x) x
 RESULT: x
 @>
@@ -107,16 +120,27 @@ RESULT: x
 You can drop parenthesis if the expression is unambiguous:
 
 ```
-@> f \x.x
-RESULT: f (\x.x)
+@> :ast f \x.x
+[APP]
++--[VAR] f
++--[FUN] \x
+   +--[VAR] x
 @>
 ```
 
 Applications are left-associative:
 
 ```
-@> f a b c d
-RESULT: (((f a) b) c) d
+@> :ast f a b c d
+[APP]
++--[APP]
+|  +--[APP]
+|  |  +--[APP]
+|  |  |  +--[VAR] f
+|  |  |  +--[VAR] a
+|  |  +--[VAR] b
+|  +--[VAR] c
++--[VAR] d
 @>
 ```
 
