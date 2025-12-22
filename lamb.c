@@ -971,7 +971,8 @@ void gc_mark(Expr_Index root)
     expr_slot(root).visited = true;
     switch (expr_slot(root).kind) {
     case EXPR_MAG:
-    case EXPR_VAR: break;
+    case EXPR_VAR:
+        break;
     case EXPR_FUN:
         gc_mark(expr_slot(root).as.fun.body);
         break;
@@ -979,6 +980,7 @@ void gc_mark(Expr_Index root)
         gc_mark(expr_slot(root).as.app.lhs);
         gc_mark(expr_slot(root).as.app.rhs);
         break;
+    default: UNREACHABLE("Expr_Kind");
     }
 }
 
