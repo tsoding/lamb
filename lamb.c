@@ -100,7 +100,7 @@ bool cmd_run(Cmd *cmd)
 
         if (execvp(cmd->items[0], (char * const*) cmd->items) < 0) {
             fprintf(stderr, "ERROR: Could not exec child process for %s: %s", cmd->items[0], strerror(errno));
-            exit(1);
+            exit(EXIT_FAILURE);
         }
         UNREACHABLE("cmd_run");
     }
@@ -192,7 +192,7 @@ int file_exists(const char *file_path)
         fprintf(stderr, "ERROR: Could not check if file %s exists: %s", file_path, strerror(errno));
         return -1;
     }
-    return 1;
+    return EXIT_FAILURE;
 #endif
 }
 
@@ -1395,7 +1395,7 @@ again:
     }
 quit:
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 // Copyright 2025 Alexey Kutepov <reximkut@gmail.com>
 //
