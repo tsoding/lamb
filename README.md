@@ -1,6 +1,6 @@
 # Lamb
 
-Tiny Pure Functional Programming Language in C. Based on [Untype Lambda Calculus](https://en.wikipedia.org/wiki/Lambda_calculus) with Normal Order reduction.
+Tiny Pure Functional Programming Language in C. Based on [Untyped Lambda Calculus](https://en.wikipedia.org/wiki/Lambda_calculus) with Normal Order reduction.
 
 ## Quick Start
 
@@ -34,7 +34,7 @@ and you get Bash-style history and command line navigation.
 
 ## Syntax
 
-The syntax is based on the [Notation of Untype Lambda Calculus](https://en.wikipedia.org/wiki/Lambda_calculus_definition#Notation) and provides few improvements over it.
+The syntax is based on the [Notation of Untyped Lambda Calculus](https://en.wikipedia.org/wiki/Lambda_calculus_definition#Notation) and provides few improvements over it.
 
 ### Variables
 
