@@ -1,4 +1,7 @@
-# Lamb
+<div align="center">
+    <img src="assets/LAMB_NBG_LOGO.png", width="200"/>
+    <h1>Lamb</h1>
+</div>
 
 Tiny Pure Functional Programming Language in C. Based on [Untype Lambda Calculus](https://en.wikipedia.org/wiki/Lambda_calculus) with Normal Order reduction.
 
