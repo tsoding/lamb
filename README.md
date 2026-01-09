@@ -9,7 +9,7 @@ Tiny Pure Functional Programming Language in C. Based on [Untype Lambda Calculus
 
 ```console
 $ cc -o lamb lamb.c
-$ ./lamb ./std.lamb
+$ ./lamb std.lamb
 ...
 ,---@>
  W-W'
@@ -30,7 +30,7 @@ RESULT: 420
 It's recommended to use Lamb with [rlwrap](https://github.com/hanslub42/rlwrap). Just do
 
 ```console
-$ rlwrap ./lamb
+$ rlwrap lamb
 ```
 
 and you get Bash-style history and command line navigation.
@@ -166,7 +166,7 @@ RESULT: ((f a) b) c
 `#void` - when applied to a lambda expression it becomes a potential redex. When reduced it forces the reduction of its argument and returns itself. Useful when you only care about the side effects of the evaluation but not the result which might be long and useless anyway:
 
 ```console
-$ ./lamb ./std.lamb
+$ ./lamb std.lamb
 @> xs = cons 69 (cons 420 (cons 1337 (cons foo (cons bar (cons bar nil)))))
 Created binding xs
 @> #void (trace_list xs)
@@ -310,7 +310,7 @@ We provided a bunch of useful bindings in [std.lamb][./std.lamb].
 Passing a file as a command line argument to the interpreter acts as if you instantly `:load`-ed it.
 
 ```console
-$ ./lamb ./main.lamb
+$ ./lamb main.lamb
 Created binding id
 Created binding const
 Created binding true
